@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import { projectQuery } from "@/sanity/lib/queries";
 import { Project } from "@/sanity/types/project";
 
@@ -65,7 +66,7 @@ export default async function ProjectPage({ params }: Props) {
             />
           ) : (
             <img
-              src={project.previewImage || "/placeholder.png"}
+              src={urlFor(project.previewImage).url() || "/placeholder.png"}
               alt={project.title}
               className="w-full h-[400px] object-cover"
             />
