@@ -1,41 +1,84 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const project = defineType({
-  name: "profile",
-  title: "profile",
+  name: "project",
+  title: "Project",
   type: "document",
-fields: [
+  fields: [
     defineField({
-        name: "title",
-        title: "Project title",
-        type: "string",
+      name: "title",
+      title: "Project title",
+      type: "string",
     }),
     defineField({
       name: "definition",
-      title: "project definition",
-      type: "string", 
+      title: "Project definition",
+      type: "string",
     }),
     defineField({
       name: "description",
-      title: "project description",
-      type: "text", 
+      title: "Project description",
+      type: "text",
+    }),
+    defineField({
+      name: "longDescription",
+      title: "Project long description",
+      type: "text",
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: {
+        source: "title",
+        maxLength: 96,
+      },
     }),
     defineField({
       name: "previewImage",
-      title: "preview image",
-      type: "image", 
+      title: "Preview image",
+      type: "image",
     }),
     defineField({
       name: "thumbnail",
-      title: "thumbnail image",
-      type: "image", 
+      title: "Thumbnail image",
+      type: "image",
     }),
     defineField({
-      name: "vidoe",
-      title: "project video",
-      type: "file", 
+      name: "video",
+      title: "Project video",
+      type: "file",
     }),
-]});  
+    defineField({
+      name: "accentColor",
+      title: "Accent color",
+      type: "string",
+    }),
+    defineField({
+      name: "techstack",
+      title: "Tech stack",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+    defineField({
+      name: "links",
+      title: "Project Links",
+      type: "object",
+      fields: [
+        defineField({
+          name: "liveDemo",
+          title: "Live Demo URL",
+          type: "url",
+        }),
+        defineField({
+          name: "repo",
+          title: "GitHub Repository URL",
+          type: "url",
+        }),
+      ],
+    }),
+  ],
+});
 
 export const homepage = defineType({
   name: "homepage",
@@ -99,8 +142,6 @@ export const homepage = defineType({
         }),
       ],
       validation: (rule) => rule.required(),
-
     }),
   ],
-
 })
