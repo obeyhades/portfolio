@@ -23,7 +23,7 @@ export default function Hero({ homepage }: HeroProps) {
       <div className="absolute inset-0 bg-black/40" />
 
       <div className="relative z-10 text-white px-4">
-        <h1 className="text-6xl md:text-8xl font-bold tracking-wide">
+        <h1 className="text-5xl md:text-8xl font-bold tracking-wide">
           {homepage.title}
         </h1>
         <p className="mt-4 text-lg md:text-2xl max-w-2xl mx-auto">

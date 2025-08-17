@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 const links = [
-  { name: "About", href: "about" },
   { name: "Skills", href: "skills" },
-  { name: "Abdulhameed", href: "hero", isCenter: true },
   { name: "Projects", href: "projects" },
+  { name: "Abdulhameed", href: "hero", isCenter: true },
+  { name: "About", href: "about" },
   { name: "Contact", href: "contact" },
 ];
 
@@ -29,7 +29,7 @@ export default function Navbar() {
   const handleScrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 80; // 80px för navbar
+      const y = el.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
@@ -47,7 +47,7 @@ export default function Navbar() {
           link.isCenter ? (
             <span
               key={link.name}
-              className="text-2xl font-bold mx-6 cursor-pointer"
+              className="text-2xl font-bold mx-6 cursor-pointer hidden md:block"
               onClick={() => handleScrollTo(link.href)}
             >
               {link.name}
