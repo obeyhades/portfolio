@@ -1,5 +1,6 @@
 "use client";
 
+import { urlFor } from "@/sanity/lib/image";
 import { Project as ProjectType } from "@/sanity/types/project";
 import Link from "next/link";
 
@@ -22,7 +23,7 @@ export default function Project({ projects }: ProjectProps) {
             {project.previewImage && (
               <div className="md:w-1/2 h-1/2 md:h-full">
                 <img
-                  src={project.previewImage}
+                  src={urlFor(project.previewImage).url()}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
