@@ -27,7 +27,7 @@ export default async function ProjectPage({ params }: Props) {
         <section className="relative flex justify-center items-center py-12">
           <div className="relative w-[90%] h-[80vh] overflow-hidden rounded-2xl shadow-2xl">
             <img
-              src={project.previewImage}
+              src={urlFor(project.previewImage).url()}
               alt={project.title}
               className="absolute inset-0 w-full h-full object-cover"
             />
