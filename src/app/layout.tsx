@@ -9,8 +9,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "My Portfolio",
-  description: "A protfolio that tells you what i can do!.",
+  title: "Code. Solve. Create. | Abdu’s Portfolio",
+  description: "A portfolio that tells the story of my growth as a Fullstack Developer who thrives on solving problems!",
 };
 
 export default function RootLayout({
