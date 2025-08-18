@@ -44,7 +44,7 @@ export default function Project({ projects }: ProjectProps) {
                     href={project.links.liveDemo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-gray-200 transition"
+                    className="px-5 py-2 bg-neutral-100 text-black text-sm font-medium rounded-lg hover:bg-gray-200 transition"
                     onClick={(e) => e.stopPropagation()}
                   >
                     Live Demo

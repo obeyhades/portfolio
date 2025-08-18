@@ -49,7 +49,7 @@ export default function Home() {
       <section id="about" className="relative flex justify-center py-24">
         <div className="max-w-4xl w-full border border-zinc-800 rounded-2xl p-10 bg-zinc-900/40 text-center">
           <h2 className="text-3xl font-bold mb-6">About Me</h2>
-          <p className="text-neutral-300 leading-relaxed text-lg">
+          <p className="text-white leading-relaxed text-lg tracking-wide max-w-2xl mx-auto">
             {homepage.about}
           </p>
         </div>
