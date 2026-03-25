@@ -27,7 +27,7 @@ export default function Project({ projects }: ProjectProps) {
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </div> 
             )}
 
             <div className="flex-1 p-8 flex flex-col justify-between text-white">
