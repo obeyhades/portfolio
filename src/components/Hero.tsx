@@ -31,17 +31,18 @@ export default function Hero({ homepage }: HeroProps) {
         <p className="mt-4 text-lg md:text-2xl max-w-2xl mx-auto">
           {homepage.description}
         </p>
+
         <motion.div
           className="mt-10 flex justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <a href="#contact">
-            <button
-              className="px-6 py-3 border border-zinc-300/80 rounded-lg text-white uppercase tracking-widest text-sm md:text-base hover:bg-white hover:text-black transition">
-              Contact me
-            </button>
+          <a
+            href="#contact"
+            className="px-6 py-3 border border-zinc-300/80 rounded-lg text-white uppercase tracking-widest text-sm md:text-base hover:bg-white hover:text-black transition"
+          >
+            Contact me
           </a>
         </motion.div>
       </div>

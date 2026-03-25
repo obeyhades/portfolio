@@ -1,24 +1,34 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
 import { Project as ProjectType } from "@/sanity/types/project";
-import Link from "next/link";
 
 type ProjectProps = {
   projects: ProjectType[];
 };
 
 export default function Project({ projects }: ProjectProps) {
+  const router = useRouter();
+
   return (
     <section id="projects" className="max-w-6xl mx-auto p-12 space-y-16">
       <h2 className="text-4xl font-bold text-center mb-12">Projects</h2>
 
       <div className="grid gap-12 grid-cols-1">
         {projects.map((project) => (
-          <Link
+          <div
             key={project._id}
-            href={`/projects/${project.slug}`}
-            className="rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 hover:shadow-2xl transition-transform hover:-translate-y-2 min-h-[420px] md:h-auto h-auto flex md:flex-row flex-col items-stretch"
+            role="button"
+            tabIndex={0}
+            onClick={() => router.push(`/projects/${project.slug}`)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                router.push(`/projects/${project.slug}`);
+              }
+            }}
+            className="rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 hover:shadow-2xl transition-transform hover:-translate-y-2 min-h-[420px] md:h-auto h-auto flex md:flex-row flex-col items-stretch cursor-pointer"
           >
             {project.previewImage && (
               <div className="md:w-1/2 h-64 md:h-auto">
@@ -27,7 +37,7 @@ export default function Project({ projects }: ProjectProps) {
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-              </div> 
+              </div>
             )}
 
             <div className="flex-1 p-8 flex flex-col justify-between text-white">
@@ -63,7 +73,7 @@ export default function Project({ projects }: ProjectProps) {
                 )}
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </section>
