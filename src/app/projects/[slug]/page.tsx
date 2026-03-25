@@ -31,10 +31,8 @@ export default async function ProjectPage({ params }: Props) {
               alt={project.title}
               className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <h1 className="text-6xl md:text-7xl font-bold text-center drop-shadow-xl">
-                {project.title}
-              </h1>
+            <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+              
             </div>
           </div>
         </section>
