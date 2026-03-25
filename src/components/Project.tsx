@@ -18,27 +18,27 @@ export default function Project({ projects }: ProjectProps) {
           <Link
             key={project._id}
             href={`/projects/${project.slug}`}
-            className="rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 hover:shadow-2xl transition-transform hover:-translate-y-2 h-[400px] flex md:flex-row flex-col"
+            className="rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 hover:shadow-2xl transition-transform hover:-translate-y-2 min-h-[420px] md:h-auto h-auto flex md:flex-row flex-col items-stretch"
           >
             {project.previewImage && (
-              <div className="md:w-1/2 h-1/2 md:h-full">
+              <div className="md:w-1/2 h-64 md:h-auto">
                 <img
                   src={urlFor(project.previewImage).url()}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </div> 
             )}
 
             <div className="flex-1 p-8 flex flex-col justify-between text-white">
               <div>
                 <h3 className="text-3xl font-semibold mb-3">{project.title}</h3>
-                <p className="text-gray-300 text-base line-clamp-4">
+                <p className="text-gray-300 text-base line-clamp-5">
                   {project.definition}
                 </p>
               </div>
 
-              <div className="mt-6 flex gap-4">
+              <div className="mt-5 flex flex-wrap gap-3">
                 {project.links?.liveDemo && (
                   <a
                     href={project.links.liveDemo}
