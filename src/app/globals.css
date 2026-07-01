@@ -1,13 +1,6 @@
 @import "tailwindcss";
 
-/* Brödtext / UI: ren sans-serif */
 :root {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-playfair), sans-serif;
 }
 
-/* Rubriker: elegant display-serif */
-h1,
-h2,
-h3 {
-  font-family: var(--font-playfair), serif;
-}
