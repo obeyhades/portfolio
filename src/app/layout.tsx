@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
+import ScrollProgress from "@/components/ScrollProgress";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={playfair.variable}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <ScrollProgress />
+        {children}
+      </body>
     </html>
   );
 }
