@@ -103,8 +103,41 @@ export const homepage = defineType({
     defineField({
       name: "skills",
       title: "Skills",
-      of: [{ type: "string" }],
       type: "array",
+      of: [
+        // Enkel variant: skriv bara namnet -> ikon väljs automatiskt
+        { type: "string" },
+        // Avancerad variant: välj egen ikon/färg
+        defineArrayMember({
+          type: "object",
+          name: "skill",
+          title: "Skill (med egen ikon)",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Namn",
+              type: "string",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "icon",
+              title: "Ikon-slug (valfritt)",
+              type: "string",
+              description:
+                "Simple Icons-slug, t.ex. nextdotjs, react, supabase. Lämna tomt för automatisk ikon utifrån namnet. Hitta slugs på simpleicons.org.",
+            }),
+            defineField({
+              name: "color",
+              title: "Hover-färg (valfritt)",
+              type: "string",
+              description: "Hex, t.ex. #61dafb. Lämna tomt för standardfärg.",
+            }),
+          ],
+          preview: {
+            select: { title: "name", subtitle: "icon" },
+          },
+        }),
+      ],
     }),
     defineField({
       name: "about",

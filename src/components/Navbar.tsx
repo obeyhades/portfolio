@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 const links = [
   { name: "Skills", href: "skills" },
@@ -12,54 +13,61 @@ const links = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const onLanding = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > window.innerHeight - 80) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > window.innerHeight - 80);
     };
-
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleScrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top: y, behavior: "smooth" });
+  // Landning: scrolla mjukt till sektionen. Andra sidor: navigera till /#sektion.
+  const go = (id: string) => {
+    if (onLanding) {
+      const el = document.getElementById(id);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    } else {
+      router.push(`/#${id}`);
     }
   };
+
+  // Alltid solid bakgrund utanför landningens hero (annars ligger den över en bild).
+  const solid = scrolled || !onLanding;
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${
-        scrolled
-          ? "bg-zinc-900/60 backdrop-blur-md border-b border-zinc-800"
+        solid
+          ? "bg-zinc-900/70 backdrop-blur-md border-b border-zinc-800"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-6xl mx-auto flex justify-between items-center py-4 px-8 text-white font-medium">
         {links.map((link) =>
           link.isCenter ? (
-            <span
+            <button
               key={link.name}
-              className="text-2xl font-bold mx-6 cursor-pointer hidden md:block"
-              onClick={() => handleScrollTo(link.href)}
+              onClick={() => go(link.href)}
+              className="text-2xl font-bold mx-6 cursor-pointer hidden md:block hover:text-gray-300 transition"
             >
               {link.name}
-            </span>
+            </button>
           ) : (
-            <span
+            <button
               key={link.name}
+              onClick={() => go(link.href)}
               className="text-lg cursor-pointer transition hover:text-gray-300"
-              onClick={() => handleScrollTo(link.href)}
             >
               {link.name}
-            </span>
+            </button>
           )
         )}
       </div>

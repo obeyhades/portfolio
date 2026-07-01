@@ -12,10 +12,10 @@ export default function Project({ projects }: ProjectProps) {
   const router = useRouter();
 
   return (
-    <section id="projects" className="max-w-6xl mx-auto p-12 space-y-16">
-      <h2 className="text-4xl font-bold text-center mb-12">Projects</h2>
+    <section id="projects" className="w-full max-w-6xl mx-auto px-6 space-y-10">
+      <h2 className="text-4xl font-bold text-center mb-8">Projects</h2>
 
-      <div className="grid gap-12 grid-cols-1">
+      <div className="grid gap-10 grid-cols-1">
         {projects.map((project) => (
           <div
             key={project._id}
@@ -40,7 +40,7 @@ export default function Project({ projects }: ProjectProps) {
               </div>
             )}
 
-            <div className="flex-1 p-8 flex flex-col justify-between text-white">
+            <div className="flex-1 p-8 flex flex-col justify-center gap-6 text-white">
               <div>
                 <h3 className="text-3xl font-semibold mb-3">{project.title}</h3>
                 <p className="text-gray-300 text-base line-clamp-5">
@@ -48,7 +48,7 @@ export default function Project({ projects }: ProjectProps) {
                 </p>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3">
                 {project.links?.liveDemo && (
                   <a
                     href={project.links.liveDemo}
