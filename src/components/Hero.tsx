@@ -10,6 +10,14 @@ type HeroProps = {
 };
 
 export default function Hero({ homepage }: HeroProps) {
+  const scrollToContact = () => {
+    const el = document.getElementById("contact");
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="hero"
@@ -41,6 +49,10 @@ export default function Hero({ homepage }: HeroProps) {
         >
           <a
             href="#contact"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToContact();
+            }}
             className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm md:text-base font-semibold text-black shadow-lg shadow-black/30 ring-1 ring-white/30 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-black/40"
           >
             Get in touch
