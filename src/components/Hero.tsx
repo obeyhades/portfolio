@@ -2,7 +2,7 @@
 
 import { Homepage } from "@/sanity/types/homepage";
 import Navbar from "./Navbar";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 type HeroProps = {
@@ -41,9 +41,13 @@ export default function Hero({ homepage }: HeroProps) {
         >
           <a
             href="#contact"
-            className="px-7 py-3 border border-zinc-300/80 rounded-lg text-white uppercase tracking-widest text-sm md:text-base hover:bg-white hover:text-black transition"
+            className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm md:text-base font-semibold text-black shadow-lg shadow-black/30 ring-1 ring-white/30 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-black/40"
           >
-            Contact me
+            Get in touch
+            <ArrowRight
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
           </a>
         </motion.div>
       </div>
