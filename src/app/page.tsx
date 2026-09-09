@@ -4,7 +4,7 @@ import { client } from "@/sanity/lib/client";
 import { homepageQuery, projectsQuery } from "@/sanity/lib/queries";
 import { Homepage } from "@/sanity/types/homepage";
 import { Project as ProjectType } from "@/sanity/types/project";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Github, Linkedin, Mail, ExternalLink } from "lucide-react";
 
@@ -13,6 +13,8 @@ import Skills from "@/components/Skills";
 import Preloader from "@/components/Preloader";
 import Project from "@/components/Project";
 import { scrollToSection } from "@/lib/scroll";
+
+const PRELOADED_KEY = "portfolio:preloaded";
 
 const reveal = {
   initial: { opacity: 0, y: 30 },
@@ -35,6 +37,12 @@ export default function Home() {
   // Laddskärmen ligger kvar tills datan och typsnitten finns, och monteras ur när den glidit bort.
   const [ready, setReady] = useState(false);
   const [preloading, setPreloading] = useState(true);
+
+  // En entré per besök. Kommer man tillbaka från en projektsida ska man inte vänta igen.
+  // Layout-effekt så att beslutet tas före första målningen – ingen blink av överlägget.
+  useLayoutEffect(() => {
+    if (window.sessionStorage.getItem(PRELOADED_KEY) === "1") setPreloading(false);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -61,7 +69,13 @@ export default function Home() {
   }, [homepage, preloading]);
 
   const preloader = preloading ? (
-    <Preloader ready={ready} onExited={() => setPreloading(false)} />
+    <Preloader
+      ready={ready}
+      onExited={() => {
+        window.sessionStorage.setItem(PRELOADED_KEY, "1");
+        setPreloading(false);
+      }}
+    />
   ) : null;
 
   if (!homepage) return preloader;

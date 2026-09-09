@@ -5,12 +5,22 @@ import { motion, useReducedMotion } from "motion/react";
 
 import { lockScroll } from "@/lib/scroll";
 
-/** Så länge räknaren minst visas, även om datan kommer direkt – annars blinkar den bara förbi. */
-const MIN_VISIBLE_MS = 1700;
+/**
+ * Så länge räknaren minst visas, även om datan kommer direkt – annars blinkar den bara förbi.
+ * Datan är normalt klar på ~0,5 s; hela sekvensen (ramp + sista biten + paus + uppglidning)
+ * landar på ~2,3 s, samma som förlagan. Mer än så känns som väntan, inte som en entré.
+ */
+const MIN_VISIBLE_MS = 1000;
+/** Hur lång tid rampen upp till taket tar. */
+const RAMP_MS = 1000;
 /** Hur långt räknaren tar sig på egen hand innan datan landat. Sista biten kräver riktig laddning. */
 const IDLE_CAP = 90;
+/** Sista biten 90 → 100, när datan finns. */
+const FINISH_MS = 250;
 /** Paus på 100 % innan skärmen släpper, så signaturen hinner ses. */
-const HOLD_AT_FULL_MS = 550;
+const HOLD_AT_FULL_MS = 320;
+/** Uppglidningen. */
+const EXIT_S = 0.7;
 
 const RADIUS = 64;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -48,7 +58,7 @@ export default function Preloader({ ready, onExited }: Props) {
   // onAnimationComplete aldrig. Skärmen ska släppa ändå – ingen ska bli inlåst.
   useEffect(() => {
     if (!leaving) return;
-    const fallback = window.setTimeout(onExited, 1200);
+    const fallback = window.setTimeout(onExited, EXIT_S * 1000 + 300);
     return () => window.clearTimeout(fallback);
   }, [leaving, onExited]);
 
@@ -65,13 +75,13 @@ export default function Preloader({ ready, onExited }: Props) {
       const elapsed = now - (startedAt.current ?? now);
 
       // Egen framfart upp till taket, mjukt avtagande – som en riktig laddning.
-      const idle = IDLE_CAP * easeOutCubic(Math.min(1, elapsed / 1900));
+      const idle = IDLE_CAP * easeOutCubic(Math.min(1, elapsed / RAMP_MS));
       let next = idle;
 
-      // När datan finns och minimitiden gått: kör sista biten till 100 på 350 ms.
+      // När datan finns och minimitiden gått: kör sista biten till 100.
       if (readyAt.current !== null && elapsed >= MIN_VISIBLE_MS) {
         const since = now - Math.max(readyAt.current, (startedAt.current ?? 0) + MIN_VISIBLE_MS);
-        next = Math.max(idle, IDLE_CAP + (100 - IDLE_CAP) * Math.min(1, since / 350));
+        next = Math.max(idle, IDLE_CAP + (100 - IDLE_CAP) * Math.min(1, since / FINISH_MS));
       }
 
       const value = Math.min(100, Math.round(next));
@@ -106,7 +116,7 @@ export default function Preloader({ ready, onExited }: Props) {
       transition={
         still
           ? { duration: 0 }
-          : { duration: 0.9, ease: [0.76, 0, 0.24, 1] }
+          : { duration: EXIT_S, ease: [0.76, 0, 0.24, 1] }
       }
       onAnimationComplete={() => {
         if (leaving) onExited();

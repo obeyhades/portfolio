@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={playfair.variable}>
-      <body className="antialiased">
+      <body className="antialiased bg-zinc-950">
         <SmoothScroll />
         {children}
       </body>
