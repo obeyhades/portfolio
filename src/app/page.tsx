@@ -10,7 +10,9 @@ import { Github, Linkedin, Mail, ExternalLink } from "lucide-react";
 
 import Hero from "@/components/Hero";
 import Skills from "@/components/Skills";
+import Preloader from "@/components/Preloader";
 import Project from "@/components/Project";
+import { scrollToSection } from "@/lib/scroll";
 
 const reveal = {
   initial: { opacity: 0, y: 30 },
@@ -30,27 +32,50 @@ function contactIcon(name: string) {
 export default function Home() {
   const [homepage, setHomepage] = useState<Homepage | null>(null);
   const [projects, setProjects] = useState<ProjectType[]>([]);
+  // Laddskärmen ligger kvar tills datan och typsnitten finns, och monteras ur när den glidit bort.
+  const [ready, setReady] = useState(false);
+  const [preloading, setPreloading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const homepageData = await client.fetch<Homepage>(homepageQuery);
+      // Parallellt: två seriella rundturer till Sanity fördubblade väntetiden före första bilden.
+      const [homepageData, projectsData] = await Promise.all([
+        client.fetch<Homepage>(homepageQuery),
+        client.fetch<ProjectType[]>(projectsQuery),
+      ]);
       setHomepage(homepageData);
-
-      const projectsData = await client.fetch<ProjectType[]>(projectsQuery);
       setProjects(projectsData);
     }
-    fetchData();
+    Promise.all([fetchData(), document.fonts.ready])
+      // Även om Sanity fallerar ska laddskärmen släppa – annars står besökaren på 90 % för alltid.
+      .catch(() => undefined)
+      .finally(() => setReady(true));
   }, []);
 
-  if (!homepage) return <div>Loading...</div>;
+  // Kommer man hit via /#about från en projektsida finns sektionen inte förrän datan
+  // landat – webbläsarens eget hash-hopp har då redan missat. Ta hashen en gång själv.
+  useEffect(() => {
+    if (!homepage || preloading) return;
+    const id = window.location.hash.slice(1);
+    if (id) scrollToSection(id);
+  }, [homepage, preloading]);
+
+  const preloader = preloading ? (
+    <Preloader ready={ready} onExited={() => setPreloading(false)} />
+  ) : null;
+
+  if (!homepage) return preloader;
 
   return (
+    <>
+    {preloader}
     <main className="scroll-smooth bg-zinc-950 text-white min-h-screen relative">
       <Hero homepage={homepage} />
 
       <motion.section
         id="skills"
-        className="relative flex justify-center py-16"
+        tabIndex={-1}
+        className="relative flex justify-center py-16 outline-none"
         {...reveal}
       >
         <Skills skills={homepage.skills} />
@@ -60,7 +85,8 @@ export default function Home() {
 
       <motion.section
         id="projects"
-        className="relative flex justify-center py-16"
+        tabIndex={-1}
+        className="relative flex justify-center py-16 outline-none"
         {...reveal}
       >
         <Project projects={projects} />
@@ -70,7 +96,8 @@ export default function Home() {
 
       <motion.section
         id="about"
-        className="relative flex justify-center py-16"
+        tabIndex={-1}
+        className="relative flex justify-center py-16 outline-none"
         {...reveal}
       >
         <div className="max-w-4xl w-full border border-zinc-800 rounded-2xl p-10 bg-zinc-900/40">
@@ -85,7 +112,8 @@ export default function Home() {
 
       <motion.section
         id="contact"
-        className="relative flex justify-center py-16"
+        tabIndex={-1}
+        className="relative flex justify-center py-16 outline-none"
         {...reveal}
       >
         <div className="max-w-4xl w-full border border-zinc-800 rounded-2xl p-10 bg-zinc-900/40 text-center">
@@ -131,5 +159,6 @@ export default function Home() {
         </div>
       </footer>
     </main>
+    </>
   );
 }
