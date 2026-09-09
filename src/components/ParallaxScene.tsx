@@ -73,6 +73,66 @@ function Layer({
 }
 
 /**
+ * Himlen och kvällsglöden, ritade i SAMMA viewBox som bergen.
+ *
+ * Låg de i procent av rutan i stället gled de isär från bergskanten så fort
+ * skärmens proportioner ändrades – på en hög telefonskärm hamnade glöden som ett
+ * brett orange fält långt under åsryggen. Här är horisonten låst till y=452,
+ * samma linje som bortre åsen, oavsett skärm.
+ *
+ * Rektangeln går långt utanför viewBoxen upp och ner: när lagret flyttas med
+ * scrollen får den aldrig lämna en tom kant efter sig. Gradienten är i
+ * userSpaceOnUse, så den håller sina stopp där de hör hemma medan ytan sträcks.
+ */
+function Sky({ progress, still }: { progress: MotionValue<number>; still: boolean }) {
+  const y = useTransform(progress, [0, 1], ["0%", still ? "0%" : "92%"]);
+
+  return (
+    <motion.div
+      className="absolute inset-0"
+      style={{ y, willChange: still ? undefined : "transform" }}
+    >
+      <svg {...SVG_PROPS}>
+        <defs>
+          <linearGradient
+            id="scene-sky"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2={VIEW_H}
+          >
+            <stop offset="0%" stopColor="#04060f" />
+            <stop offset="16%" stopColor="#080d20" />
+            <stop offset="30%" stopColor="#101637" />
+            <stop offset="40%" stopColor="#1e2049" />
+            <stop offset="46%" stopColor="#35285a" />
+            <stop offset="49%" stopColor="#6b3c63" />
+            <stop offset="51%" stopColor="#a5564c" />
+            <stop offset="53%" stopColor="#d17c3d" />
+            <stop offset="57%" stopColor="#7c4145" />
+            <stop offset="64%" stopColor="#3a2438" />
+            <stop offset="75%" stopColor="#1a1526" />
+            <stop offset="88%" stopColor="#0d0d14" />
+            <stop offset="100%" stopColor="#09090b" />
+          </linearGradient>
+
+          {/* Bärnstensglöden vid horisonten – samma accent som scrollbaren. */}
+          <radialGradient id="scene-glow" gradientUnits="userSpaceOnUse" cx="720" cy="478" r="600">
+            <stop offset="0%" stopColor="#ffb05c" stopOpacity="0.5" />
+            <stop offset="34%" stopColor="#f59e0b" stopOpacity="0.22" />
+            <stop offset="70%" stopColor="#f59e0b" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        <rect x={-VIEW_W} y={-VIEW_H} width={VIEW_W * 3} height={VIEW_H * 3} fill="url(#scene-sky)" />
+        <ellipse cx="720" cy="478" rx="600" ry="150" fill="url(#scene-glow)" />
+      </svg>
+    </motion.div>
+  );
+}
+
+/**
  * Landskapet bakom heron: himmel, stjärnor, horisontglöd och åtta djupplan.
  * Rent dekorativt, därför aria-hidden – skärmläsare ska höra rubriken, inte bergen.
  *
@@ -93,18 +153,10 @@ export default function ParallaxScene({
   });
 
   const starY = useTransform(scrollYProgress, [0, 1], ["0%", still ? "0%" : "92%"]);
-  const glowY = useTransform(scrollYProgress, [0, 1], ["0%", still ? "0%" : "80%"]);
 
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-      {/* Himlen. Sista dagsljuset ligger kvar strax ovanför horisonten. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, #04060f 0%, #080d20 16%, #101637 30%, #1e2049 40%, #35285a 46%, #6b3c63 50%, #a5564c 53%, #d17c3d 55.5%, #7c4145 60%, #3a2438 68%, #1a1526 78%, #0d0d14 90%, #09090b 100%)",
-        }}
-      />
+      <Sky progress={scrollYProgress} still={still} />
 
       <motion.div
         className="absolute inset-0"
@@ -117,22 +169,16 @@ export default function ParallaxScene({
         </svg>
       </motion.div>
 
-      {/* Bärnstensglöden vid horisonten – samma accent som scrollbaren. */}
-      <motion.div
-        className="absolute inset-x-0"
-        style={{
-          top: "22%",
-          height: "34%",
-          y: glowY,
-          willChange: still ? undefined : "transform",
-          background:
-            "radial-gradient(52% 100% at 50% 100%, rgba(255,176,92,0.5) 0%, rgba(245,158,11,0.22) 34%, rgba(245,158,11,0) 70%)",
-        }}
-      />
-
       {SCENE_LAYERS.map((layer) => (
         <Layer key={layer.name} layer={layer} progress={scrollYProgress} still={still} />
       ))}
+
+      {/*
+        Heron klipps av sin overflow-hidden. Utan den här övergången slutar
+        trädsiluetterna i en rak linje mot nästa sektion – tydligast på mobil,
+        där skärmen är hög och bilden beskärs hårdast.
+      */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[14%] bg-gradient-to-b from-transparent to-zinc-950" />
     </div>
   );
 }
