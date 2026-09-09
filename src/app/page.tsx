@@ -14,7 +14,28 @@ import Preloader from "@/components/Preloader";
 import Project from "@/components/Project";
 import { scrollToSection } from "@/lib/scroll";
 
-const PRELOADED_KEY = "portfolio:preloaded";
+/**
+ * Laddskärmen hör till sidstarten – ny flik eller omladdning – aldrig till navigering
+ * inne på sajten. Variabeln lever så länge dokumentet lever och nollställs vid en
+ * riktig omladdning.
+ */
+let preloaderShownThisDocument = false;
+
+/**
+ * Sant bara när det här dokumentet öppnades på startsidan. Kommer besökaren in på
+ * en projektsida och klickar sig hit är det navigering, inte start – då ska inget
+ * överlägg dyka upp. Navigation Timing bär dokumentets ursprungliga adress, vilket
+ * location inte gör efter en klientnavigering.
+ */
+function documentStartedOnLanding() {
+  const [entry] = performance.getEntriesByType("navigation");
+  if (!entry) return window.location.pathname === "/";
+  try {
+    return new URL(entry.name).pathname === "/";
+  } catch {
+    return false;
+  }
+}
 
 const reveal = {
   initial: { opacity: 0, y: 30 },
@@ -38,10 +59,11 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [preloading, setPreloading] = useState(true);
 
-  // En entré per besök. Kommer man tillbaka från en projektsida ska man inte vänta igen.
+  // Kommer man tillbaka hit från en projektsida ska man inte vänta igen.
   // Layout-effekt så att beslutet tas före första målningen – ingen blink av överlägget.
   useLayoutEffect(() => {
-    if (window.sessionStorage.getItem(PRELOADED_KEY) === "1") setPreloading(false);
+    if (preloaderShownThisDocument || !documentStartedOnLanding()) setPreloading(false);
+    preloaderShownThisDocument = true;
   }, []);
 
   useEffect(() => {
@@ -71,10 +93,7 @@ export default function Home() {
   const preloader = preloading ? (
     <Preloader
       ready={ready}
-      onExited={() => {
-        window.sessionStorage.setItem(PRELOADED_KEY, "1");
-        setPreloading(false);
-      }}
+      onExited={() => setPreloading(false)}
     />
   ) : null;
 
