@@ -105,13 +105,10 @@ export const homepage = defineType({
       title: "Skills",
       type: "array",
       of: [
-        // Enkel variant: skriv bara namnet -> ikon väljs automatiskt
-        { type: "string" },
-        // Avancerad variant: välj egen ikon/färg
         defineArrayMember({
           type: "object",
           name: "skill",
-          title: "Skill (med egen ikon)",
+          title: "Skill",
           fields: [
             defineField({
               name: "name",
