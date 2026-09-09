@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { scrollToSection } from "@/lib/scroll";
+
 const links = [
   { name: "Skills", href: "skills" },
   { name: "Projects", href: "projects" },
@@ -19,7 +21,9 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > window.innerHeight - 80);
+      // Heron ljusnar mot horisonten redan efter någon hundradels skärm, så
+      // navbaren behöver sin platta långt innan man scrollat förbi hela heron.
+      setScrolled(window.scrollY > 64);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll);
@@ -29,11 +33,7 @@ export default function Navbar() {
   // Landning: scrolla mjukt till sektionen. Andra sidor: navigera till /#sektion.
   const go = (id: string) => {
     if (onLanding) {
-      const el = document.getElementById(id);
-      if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
+      scrollToSection(id);
     } else {
       router.push(`/#${id}`);
     }
