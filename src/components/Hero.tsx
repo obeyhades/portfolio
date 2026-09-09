@@ -49,18 +49,18 @@ export default function Hero({ homepage }: HeroProps) {
       ref={heroRef}
       id="hero"
       tabIndex={-1}
-      className="relative w-full h-svh overflow-hidden flex items-start justify-center text-center outline-none"
+      className="relative w-full h-svh overflow-hidden flex items-center justify-center text-center outline-none"
     >
       <ParallaxScene target={heroRef} />
 
       <Navbar />
 
       {/* Mörkar bara där texten ligger, så landskapet inte plattas till av en heltäckande scrim. */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(62%_46%_at_50%_30%,rgba(4,6,13,0.62)_0%,rgba(4,6,13,0.3)_46%,rgba(4,6,13,0)_76%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(64%_50%_at_50%_44%,rgba(4,6,13,0.62)_0%,rgba(4,6,13,0.3)_46%,rgba(4,6,13,0)_76%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent" />
 
       {/* Uppe i himlen, som Firewatch-loggan – nedre halvan tillhör landskapet och fiskaren. */}
-      <div ref={copyRef} className="relative z-10 text-white px-4 pt-[13vh] md:pt-[15vh] will-change-transform">
+      <div ref={copyRef} className="relative z-10 text-white px-4 pb-[6vh] will-change-transform">
         <h1 className="text-5xl md:text-8xl font-bold tracking-wide drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
           {homepage.title}
         </h1>
